@@ -102,6 +102,14 @@ Complex Complex::operator/ (Complex z)
 	return Complex ((Re() * z.Re() + Im() * z.Im()) / denominator, (Im() * z.Re() - Re() * z.Im()) / denominator);
 }
 
+bool Complex::operator== (Complex z)
+{
+	if (this->Re() == z.Re() && this->Im() == z.Im())
+	{
+		return true;
+	}
+	return false;
+}
 
 // return the euclidean norm of a complex number using Pythagoras' Theorem.
 double Complex::norm () 
@@ -223,11 +231,123 @@ Complex Complex::conjugate ()
 
 // Add new functions here. Just preface the name with a "c". The expression class will handle everything else for you (if you are on mac).
 
+// Implementation using standard libraries and eulers identity
+// Complex cexp(Complex z)
+// {
+// 	double r = exp(z.Re());
+// 	return Complex(r * cos(z.Im()), r * sin(z.Im()));
+// }
+
+// Implementation using continued fractions
 Complex cexp(Complex z)
 {
-	double r = exp(z.Re());
-	return Complex(r * cos(z.Im()), r * sin(z.Im()));
+	// the modified lentz algorithm to evaluate the continued fraction described by Khovansky
+	Complex fredu, Credu, Dredu, fnorm, Cnorm, Dnorm;
+	Complex tiny(1e-30, 0);
+	Complex zero(0, 0);
+
+	// Range reduction basically exp(z) = exp(z / |z|^2 )^(floor(|z|^2)) * exp(z / |z|^2 * (|z|^2 - floor(|z|^2)))
+	Complex zRedu = z / Complex(z.norm2(), 0);
+
+	// Coefficients of the continued fraction
+	Complex A(6, 0);
+
+	// |z|^2 - floor(|z|^2)
+	Complex zNorm(z.norm2() - floor(z.norm2()), 0);
+
+	// floor(|z|^2)
+	int normFactor = floor(z.norm2());
+
+	// squares for faster calculation
+	Complex zRedu2 = POW(zRedu, 2);
+	Complex zNorm2 = POW(zRedu * zNorm, 2);  
+
+	// helper variables for lentz algorithm
+	Cnorm = Credu = Complex(1, 0);
+	Dnorm = Dredu = Complex(0, 0);
+	fnorm = fredu = Complex(1, 0);
+
+	// First terms of the fraction
+	Credu = Complex(2, 0) - zRedu + Complex(2, 0) * zRedu / Credu;
+	Cnorm = Complex(2, 0) - (zRedu * zNorm) + Complex(2, 0) * (zRedu * zNorm) / Cnorm;
+
+	if (Credu == zero)
+	{
+		Credu = tiny;
+	}
+
+	if (Cnorm == zero)
+	{
+		Cnorm = tiny;
+	}
+
+	Dredu = ((Complex(2, 0) - zRedu) + Complex(2, 0) * zRedu * Dredu);
+	Dnorm = Complex(2, 0) - (zNorm * zRedu) + Complex(2, 0) * (zNorm * zRedu) * Dnorm;
+
+	if (Dnorm == zero)
+	{
+		Dnorm = tiny;
+	}
+
+	if (Dredu == zero)
+	{
+		Dredu = tiny;
+	}
+
+	Dredu = Dredu.inverse();
+	Dnorm = Dnorm.inverse();
+
+	fredu = fredu * Credu * Dredu;
+	fnorm = fnorm * Cnorm * Dnorm;
+
+	// maximum of thousand iterations should be enough (usually converges after 5 iterations)
+	for (int i = 0; i < 1000; i++)
+	{
+		Credu = A + zRedu2 / Credu;
+		Cnorm = A + zNorm2 / Cnorm;
+		
+		if (Credu == zero)
+		{
+			Credu = tiny;
+		}
+
+		if (Cnorm == zero)
+		{
+			Cnorm = tiny;
+		}
+
+		Dredu = (A + zRedu2 * Dredu);
+		Dnorm = (A + zNorm2 * Dnorm);
+
+		if (Dredu == zero)
+		{
+			Dredu = tiny; 
+		}
+
+		if (Dnorm == zero)
+		{
+			Dnorm = tiny;
+		}
+
+		Dredu = Dredu.inverse();
+		Dnorm = Dnorm.inverse();
+
+		fredu = fredu * Credu * Dredu;
+		fnorm = fnorm * Cnorm * Dnorm;
+
+		A = Complex(4 + A.Re(), 0);
+
+		// Condition for breaking the loop
+		if ((Credu * Dredu - Complex(1, 0)).norm2() < 1e-30 && (Cnorm * Dnorm - Complex(1, 0)).norm2() < 1e-30)
+		{
+			break;
+		}
+	}
+
+	// putting it all together 
+	return POW(fredu, normFactor) * fnorm;
 }
+
 
 Complex csin(Complex z)
 {

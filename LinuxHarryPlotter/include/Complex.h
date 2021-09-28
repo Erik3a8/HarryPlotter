@@ -33,6 +33,7 @@ public:
 	Complex operator- (Complex z);
 	Complex operator* (Complex z);
 	Complex operator/ (Complex z);
+	bool operator== (Complex z);
 
 
 	// norm of a Complex number 
