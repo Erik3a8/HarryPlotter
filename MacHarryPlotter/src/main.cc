@@ -16,17 +16,25 @@
 #include "BaseCanvas.h"
 #include "StaticGrid.h"
 #include "StaticColorDomain.h"
+#include "GeometryCanvas.h"
 #include "rgbCanvas.h"
 #include "Julia.h"
 #include "Expression_JIT.h"
 // #include "Expression_SLOW.h"
 #include "Encoder.h"
 #include "Mandelbrot.h"
+#include "Construction.h"
+#include "GeoObject.h"
+#include "Circle.h"
+#include "Apollonian.h"
 #include "Complex.cc"
 #include "BaseCanvas.cc"
 #include "StaticGrid.cc"
 #include "StaticColorDomain.cc"
 #include "rgbCanvas.cc"
+#include "Circle.cc"
+#include "GeometryCanvas.cc"
+#include "Apollonian.cc"
 #include "Function.cc"
 #include "Interpolator.cc"
 #include "Expression_JIT.cc"
@@ -135,6 +143,26 @@ void escapeTime ()
 	}	
 }
 
+void geometry ()
+{
+	char geometryToken;
+	while (geometryToken != 'b')
+	{
+		printf("GEOMETRY MODE \n\n");
+		printf("1: Configure \n2: Plot Image\nb: Back \n");
+		std::cin >> geometryToken;
+		std::cout << clearScreen;
+		std::cin.clear();
+
+		switch (geometryToken)
+		{
+			case '1': GeometryCanvas::configure(); break;
+			case '2': GeometryCanvas::image (); break;
+			case 'b': break;
+			default: printf("Invalid Option! \n"); break;
+		}
+	}	
+}
 
 using namespace std::chrono;
 
@@ -191,7 +219,7 @@ int main()
 	while (mainToken != 'q')
 	{
 		printf("MAIN MENU \n\n");
-		printf("1: Escape time (Mandelbrot or similar) \n2: Plotting Complex Function \nq: Exit \n");
+		printf("1: Escape time (Mandelbrot or similar) \n2: Plotting Complex Function \n3: Apollonian Gasket \nq: Exit \n");
 		std::cin >> mainToken;
 		std::cout << clearScreen;
 		std::cin.clear();
@@ -200,11 +228,13 @@ int main()
 		{
 			case '1': escapeTime (); break;
 			case '2': plot (); break;
+			case '3': geometry (); break;
 			case 'q': break;
 			default: printf("Invalid Option! \n"); break;
 		}
 	}
 
 	printf("Remember to relocate/rename all files of this session or they might be overwritten next time! \n");
+
 	return 0;
 }

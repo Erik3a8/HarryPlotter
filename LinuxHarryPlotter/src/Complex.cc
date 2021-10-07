@@ -96,6 +96,17 @@ Complex Complex::operator* (Complex z)
   	return *result;
 }
 
+Complex Complex::operator* (double lambda)
+{
+	__m128d vec1 = _mm_set_pd(this->Im(), this->Re());
+	__m128d vec2 = _mm_set_pd(lambda, lambda);
+	__m128d res = _mm_mul_pd(vec1, vec2);
+
+	Complex* result = (Complex* )&res;
+
+	return *result;
+}
+
 Complex Complex::operator/ (Complex z) 
 {	
 	double denominator = z.norm2();

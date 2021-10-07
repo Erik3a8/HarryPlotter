@@ -135,6 +135,27 @@ void escapeTime ()
 	}	
 }
 
+void geometry ()
+{
+	char geometryToken;
+	while (geometryToken != 'b')
+	{
+		printf("GEOMETRY MODE \n\n");
+		printf("1: Configure \n2: Plot Image\nb: Back \n");
+		std::cin >> geometryToken;
+		std::cout << clearScreen;
+		std::cin.clear();
+
+		switch (geometryToken)
+		{
+			case '1': GeometryCanvas::configure(); break;
+			case '2': GeometryCanvas::image (); break;
+			case 'b': break;
+			default: printf("Invalid Option! \n"); break;
+		}
+	}	
+}
+
 
 using namespace std::chrono;
 
@@ -180,7 +201,7 @@ int main()
 	while (mainToken != 'q')
 	{
 		printf("MAIN MENU \n\n");
-		printf("1: Escape time (Mandelbrot or similar) \n2: Plotting Complex Function \nq: Exit \n");
+		printf("1: Escape time (Mandelbrot or similar) \n2: Plotting Complex Function \n3: Apollonian Gasket \nq: Exit \n");
 		std::cin >> mainToken;
 		std::cout << clearScreen;
 		std::cin.clear();
@@ -189,6 +210,7 @@ int main()
 		{
 			case '1': escapeTime (); break;
 			case '2': plot (); break;
+			case '3': geometry (); break;
 			case 'q': break;
 			default: printf("Invalid Option! \n"); break;
 		}

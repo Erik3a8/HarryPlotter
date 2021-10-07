@@ -32,6 +32,7 @@ public:
 	Complex operator+ (Complex z);
 	Complex operator- (Complex z);
 	Complex operator* (Complex z);
+	Complex operator* (double lambda);
 	Complex operator/ (Complex z);
 	bool operator== (Complex z);
 

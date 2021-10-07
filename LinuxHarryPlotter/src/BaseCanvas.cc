@@ -101,7 +101,6 @@ void BaseCanvas::setPath(std::string path)
     PATH = path;
 }
 
-
 // virtual methods
 void BaseCanvas::populatePixel (const int x, const int y, Function &F) {}
 void BaseCanvas::populateCanvas (Function &F, const int interval) {}

@@ -45,7 +45,7 @@ void StaticGrid::populatePixel (const int X, const int Y, Function &F)
     Complex zMapped = F.returnComplex();
 
     // Compute the Corresponding Pixel
-    int X_NEW = round((zMapped.Re() - (getCenterX() - realSizeX) / 2) / getResolution());
+    int X_NEW = round((zMapped.Re() - (getCenterX() - realSizeX / 2)) / getResolution());
     int Y_NEW = round(((getCenterY() + realSizeY / 2) - zMapped.Im()) / getResolution());
 
     // Check if that Pixel is outside the Canvas
