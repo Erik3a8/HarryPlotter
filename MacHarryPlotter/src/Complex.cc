@@ -1,7 +1,11 @@
 #include <iostream>
-#include <pmmintrin.h>
 #include <math.h>
 #include "Complex.h"
+
+
+#ifdef __SSE3__ 
+	#include <pmmintrin.h>
+#endif
 
 #ifndef COMPLEX_IMP
 #define COMPLEX_IMP
@@ -55,6 +59,7 @@ void Complex::print ()
 
 Complex Complex::operator+ (Complex z) 
 {
+#ifdef __SSE3__ 
 	__m128d vec1 = _mm_set_pd(this->Im(), this->Re());
 	__m128d vec2 = _mm_set_pd(z.Im(), z.Re());
 	__m128d res = _mm_add_pd(vec1, vec2);
@@ -62,10 +67,15 @@ Complex Complex::operator+ (Complex z)
 	Complex* result = (Complex* )&res;
 
 	return *result;
+
+#else
+	return Complex(this->Re() - z.Re(), this->Im() - z.Im());
+#endif
 }
 
 Complex Complex::operator- (Complex z) 
 {
+#ifdef __SSE3__
 	__m128d vec1 = _mm_set_pd(this->Im(), this->Re());
 	__m128d vec2 = _mm_set_pd(-z.Im(), -z.Re());
 	__m128d res = _mm_add_pd(vec1, vec2);
@@ -73,11 +83,17 @@ Complex Complex::operator- (Complex z)
 	Complex* result = (Complex* )&res;
 
 	return *result;
+
+#else
+	return Complex(this->Re() - z.Re(), this->Im() - z.Im());
+#endif
 }
 
 // Multiplication this way is a tiny bit faster although also a bit more prone to rounding errors
 Complex Complex::operator* (Complex z) 
 {	
+	
+#ifdef __SSE3__
 	double real = this->Re();
 	double imaginary = this->Im();
 
@@ -94,10 +110,15 @@ Complex Complex::operator* (Complex z)
   	Complex* result = (Complex* )&num3;
 
   	return *result;
+
+#else
+  	return Complex(this->Re() * z.Re() - this->Im() * z.Im(), this->Im() * z.Re() + this->Re() * z.Im());
+#endif
 }
 
 Complex Complex::operator* (double lambda)
 {
+#ifdef __SSE3__
 	__m128d vec1 = _mm_set_pd(this->Im(), this->Re());
 	__m128d vec2 = _mm_set_pd(lambda, lambda);
 	__m128d res = _mm_mul_pd(vec1, vec2);
@@ -105,6 +126,10 @@ Complex Complex::operator* (double lambda)
 	Complex* result = (Complex* )&res;
 
 	return *result;
+
+#else
+	return Complex(this->Re() * lambda, this->Im() * lambda);
+#endif
 }
 
 Complex Complex::operator/ (Complex z) 

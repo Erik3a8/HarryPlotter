@@ -1,5 +1,4 @@
-/* Function for Julia Fractals, Contains a Quadratic version which is FAST and a version where I can
-Iterate a user entered expression (SLOW). Inherits from Expression (Function) class. Note that this class 
+/* Function for Julia Fractals. Inherits from Expression (Function) class. Note that this class 
 is abused as a "normal" function plotter by iterating 0 times. Not pretty. */
 
 #ifndef JULIA_H
@@ -25,7 +24,7 @@ public:
 	void iterate ();
 
 	// Compute the value
-	void evaluate ();
+	void evaluate () override;
 
 	// mostly for debugging
 	void print ();
