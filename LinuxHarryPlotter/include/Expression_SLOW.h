@@ -21,11 +21,13 @@ private:
 
 	std::string input;
 
-	jit_compile* funcPtr;
+	jit_compile* funcPtr = nullptr;
 
 public:
 
 	Expression () = default;
+
+	virtual ~Expression () = default;
 	
 	jit_compile* getFuncPtr ();
 	

@@ -324,11 +324,11 @@ void StaticGrid::image ()
         function.prepare();
         function.parse();
 
-        if (function.getFuncPtr() == nullptr)
-        {
-            printf("Exiting... \n\n");
-            return;
-        }
+        // if (function.getFuncPtr() == nullptr)
+        // {
+        //     printf("Exiting... \n\n");
+        //     return;
+        // }
 
         //Calculate 
         printf("Calculating... \n");
@@ -396,11 +396,11 @@ void StaticGrid::movie ()
         function.prepare();
         function.parse();
 
-        if (function.getFuncPtr() == nullptr)
-        {
-            printf("Exiting... \n\n");
-            return;
-        }
+        // if (function.getFuncPtr() == nullptr)
+        // {
+        //     printf("Exiting... \n\n");
+        //     return;
+        // }
 
         //Calculate 
         printf("Rendering... \n");

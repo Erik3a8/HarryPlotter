@@ -311,7 +311,7 @@ Complex Expression::compute (Complex z, int N)
 {
 	Complex temp;
 	int op;
-	int i, j = 0;
+	int i = 0, j = 0;
 	// There are more operators than numbers
 	while (i < operatorsArray.size())
 	{
@@ -357,6 +357,7 @@ Complex Expression::compute (Complex z, int N)
 
 void Expression::reset()
 {
+	this->input = "";
 	return;
 }
 
