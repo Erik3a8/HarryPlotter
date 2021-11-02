@@ -448,12 +448,6 @@ void StaticGrid::image ()
         function.prepare();
         function.parse();
 
-        if (function.getFuncPtr() == nullptr)
-        {
-            printf("Exiting... \n\n");
-            return;
-        }
-
         //Calculate 
         printf("Calculating... \n");
 
@@ -519,12 +513,6 @@ void StaticGrid::movie ()
         function.set(userInput);
         function.prepare();
         function.parse();
-
-        if (function.getFuncPtr() == nullptr)
-        {
-            printf("Exiting... \n\n");
-            return;
-        }
 
         //Calculate 
         printf("Rendering... \n");

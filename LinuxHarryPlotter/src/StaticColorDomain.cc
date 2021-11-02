@@ -322,12 +322,6 @@ void StaticColorDomain::image ()
 		function.prepare();
 		function.parse();
 
-		if (function.getFuncPtr() == nullptr)
-		{
-			printf("Exiting... \n\n");
-			return;
-		}
-
 		//Calculate 
 		printf("Calculating... \n");
 
@@ -394,13 +388,7 @@ void StaticColorDomain::movie ()
 		function.set(userInput);
 		function.prepare();
 		function.parse();
-
-		if (function.getFuncPtr() == nullptr)
-		{
-			printf("Exiting... \n\n");
-			return;
-		}
-
+		
 		//Calculate 
 		printf("Rendering... \n");
 		std::string filename = "ColorDomainAnimation_" + std::to_string(fileNumberMPG) + ".mpg";
