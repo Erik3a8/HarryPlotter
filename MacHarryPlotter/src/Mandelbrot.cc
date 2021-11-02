@@ -1,4 +1,5 @@
 #include <math.h>
+#include "Mandelbrot.h"
 
 
 /* Function to plot the Mandelbrot set */

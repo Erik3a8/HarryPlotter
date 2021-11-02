@@ -1,4 +1,5 @@
-
+#include "Function.h"
+#include "Complex.h"
 
 
 unsigned int Function::breakoutIterator{1};

@@ -5,6 +5,7 @@
 
 #include "Complex.h"
 #include "Colors.h"
+#include "GeoObject.h"
 
 
 class Circle : public GeoObject {

@@ -11,7 +11,7 @@ public:
 
 	GeoObject() = default; 
 	virtual ~GeoObject () = default;
-	virtual void draw (Color rgb, Color buffer[], unsigned int bufferWidth, unsigned int bufferHeight) {std::cout << "called default drawing! \n"; return;};
+	virtual void draw (Color rgb, Color buffer[], unsigned int bufferWidth, unsigned int bufferHeight) {return;};
 
 	/* It turns out 4 parameters are sufficient to describe either lines or circles. 
 	param1 = radius

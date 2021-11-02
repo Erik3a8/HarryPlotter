@@ -9,6 +9,10 @@ This is what happens when you decide to change the architecture halfway into the
 #include "BaseCanvas.h"
 
 class StaticGrid : public Animation {
+private:
+
+	bool samplingDirection;
+
 public:
 
 	/* Initialize and set data all constant. Benchmark exchanging data instead of reallocating every time for varying
@@ -17,6 +21,10 @@ public:
 
 	// Amount of pixels between each rendered line 
 	static unsigned int lineSpacing;
+
+	// How many oversampling steps for each pixel
+	double findSamplingStepX (const int X, const int Y, Function &F);
+	double findSamplingStepY (const int X, const int Y, Function &F);
 
 	// For Outputting files
 	static unsigned int fileNumberBMP;

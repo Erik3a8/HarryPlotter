@@ -4,6 +4,9 @@
 #include <string>
 #include <math.h>
 #include <cstring>
+#include "Complex.h"
+#include "Colors.h"
+
 
 
 

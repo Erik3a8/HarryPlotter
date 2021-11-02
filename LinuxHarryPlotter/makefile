@@ -2,7 +2,7 @@
 CC = g++
 
 #If openmp is no installed simply remove the flag it should work just fine without it.
-CFLAGS = -Ofast -fopenmp -std=c++2a -msse3
+CFLAGS = -Ofast -fopenmp -std=c++2a -msse3 -lstdc++
 
 INCLUDES = -Iinclude
 
@@ -12,7 +12,7 @@ TARGET_DIR = HarryPlotter
 all: src/main.cc
 
 	@echo "Compiling with $(CFLAGS)"
-	@$(CC) $(CFLAGS) $(INCLUDES) src/main.cc -o HarryPlotterExec
+	@$(CC) $(CFLAGS) $(INCLUDES) src/* -o HarryPlotterExec
 	
 	@echo "Compiled successfully!"
 	@mkdir ~/$(TARGET_DIR)

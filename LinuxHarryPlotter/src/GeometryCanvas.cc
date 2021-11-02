@@ -4,6 +4,10 @@ size in case of animations. Definitely observe the deconstructor to avoid memory
 #include <iostream>
 #include <math.h>
 #include <chrono>
+#include "GeometryCanvas.h"
+#include "Apollonian.h"
+#include "Julia.h"
+
 
 
 unsigned int GeometryCanvas::fileNumberBMP{0};
@@ -78,6 +82,8 @@ void GeometryCanvas::populateGeoCanvas (Construction constr)
     }
 }
 
+using namespace std::chrono;
+
 // So begins the enormous command line interface...
 void GeometryCanvas::configure ()
 {
@@ -114,6 +120,7 @@ void GeometryCanvas::configure ()
 					return;
 				}
 
+				setResolution(getResolution() * getWidth() / userWidth);
 				setWidth(userWidth);
 				printf("Ok! \n");
 				printf("Enter desired height in pixels \n");
@@ -280,7 +287,8 @@ void GeometryCanvas::configure ()
 				printf("Set length to %d frames \n\n", getFrameCount()); 
 				break;
 
-			// case '8':
+			case '8':
+				printf("Not implemented! \n");
 			// 	printf("Enter desired length in seconds! \n\n");
 			// 	double userLength;
 
@@ -296,7 +304,7 @@ void GeometryCanvas::configure ()
 
 			// 	SET_FRAME_COUNT(userLength * GET_FPS());
 			// 	printf("Set length to %d frames \n\n", GET_FRAME_COUNT()); 
-			// 	break;
+			break;
 
 			case 'b': break;
 
@@ -359,72 +367,72 @@ void GeometryCanvas::image ()
 	return;
 }
 
-// void GeometryCanvas::movie ()
-//{
-// 	char videoToken;
-//	printf("ANIMATOR \n\n");
-//	printf("This function will output a .mpg file with the following properties: \n");
-//
-//	// Inform the user about the output that will be created
-//	std::cout << "Center point :     " << "(" << getCenterX() << ", " << getCenterY() << ")" << std::endl;
-//	std::cout << "Width in Pixels:   " << getWidth() << std::endl;
-//	std::cout << "Height in Pixels : " << getHeight() << std::endl;
-//	std::cout << "Iterations:        " << Function::getBreakoutIterator() << std::endl;
-//	std::cout << "Gamma value:       " << gamma << std::endl;
-//	std::cout << "Framerate:         " << getFps() << std::endl;
-//	std::cout << "Length (Frames):   " << getFrameCount() << std::endl;
-//
-//
-//	printf("Continue? y/n \n");
-//
-//	std::cin >> videoToken;
-//	std::cout << "\033[2J\033[1;1H";
-//
-//	if (videoToken == 'y')
-//	{
-//		std::cin.ignore();
-//		Julia function;
-//		std::string userInput;
-//
-//		GeometryCanvas canvas(getWidth(), getHeight(), getResolution(), getCenterX(), getCenterY());
-//		
-//		printf("Enter Expression! \n");
-//		std::getline(std::cin, userInput);
-//
-//		if (std::cin.fail())
-//		{
-//			printf("Error Reading input! \n");
-//			return;
-//		}
-//
-//		//Prepare the Function
-//		function.set(userInput);
-//		function.prepare();
-//		function.parse();
-//
-//		if (function.getFuncPtr() == nullptr)
-//		{
-//			printf("Exiting... \n\n");
-//			return;
-//		}
-//
-//		//Calculate 
-//		printf("Rendering... \n");
-//		std::string filename = "ColorDomainAnimation_" + std::to_string(fileNumberMPG) + ".mpg";
-//		const char* c_filename = filename.c_str();
-//
-//		auto tstart = steady_clock::now();
-//		canvas.render (function, 1, 1, c_filename);
-//		std::cout << "Calculation finished in: " << (double)duration_cast<microseconds>(steady_clock::now() - tstart).count()/1000000.0 << "s" << std::endl;
-//		
-//		fileNumberMPG++;
-//		function.reset();
-//		canvas.resetBuffer();
-//
-//		std::cout << "Success! Saved as: " << filename << "!" << std::endl;
-//		printf("\n");
-//	}
-//
-//	
-//	return;
-//}
+void GeometryCanvas::movie ()
+{
+	char videoToken;
+	printf("ANIMATOR \n\n");
+	printf("This function will output a .mpg file with the following properties: \n");
+
+	// Inform the user about the output that will be created
+	std::cout << "Center point :     " << "(" << getCenterX() << ", " << getCenterY() << ")" << std::endl;
+	std::cout << "Width in Pixels:   " << getWidth() << std::endl;
+	std::cout << "Height in Pixels : " << getHeight() << std::endl;
+	std::cout << "Iterations:        " << Function::getBreakoutIterator() << std::endl;
+	std::cout << "Gamma value:       " << gamma << std::endl;
+	std::cout << "Framerate:         " << getFps() << std::endl;
+	std::cout << "Length (Frames):   " << getFrameCount() << std::endl;
+
+
+	printf("Continue? y/n \n");
+
+	std::cin >> videoToken;
+	std::cout << "\033[2J\033[1;1H";
+
+	if (videoToken == 'y')
+	{
+		std::cin.ignore();
+		Julia function;
+		std::string userInput;
+
+		GeometryCanvas canvas(getWidth(), getHeight(), getResolution(), getCenterX(), getCenterY());
+		
+		printf("Enter Expression! \n");
+		std::getline(std::cin, userInput);
+
+		if (std::cin.fail())
+		{
+			printf("Error Reading input! \n");
+			return;
+		}
+
+		//Prepare the Function
+		function.set(userInput);
+		function.prepare();
+		function.parse();
+
+		if (function.getFuncPtr() == nullptr)
+		{
+			printf("Exiting... \n\n");
+			return;
+		}
+
+		//Calculate 
+		printf("Rendering... \n");
+		std::string filename = "ColorDomainAnimation_" + std::to_string(fileNumberMPG) + ".mpg";
+		const char* c_filename = filename.c_str();
+
+		auto tstart = steady_clock::now();
+		canvas.render (function, 1, 1, c_filename);
+		std::cout << "Calculation finished in: " << (double)duration_cast<microseconds>(steady_clock::now() - tstart).count()/1000000.0 << "s" << std::endl;
+		
+		fileNumberMPG++;
+		function.reset();
+		canvas.resetBuffer();
+
+		std::cout << "Success! Saved as: " << filename << "!" << std::endl;
+		printf("\n");
+	}
+
+	
+	return;
+}

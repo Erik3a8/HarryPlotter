@@ -1,5 +1,6 @@
 #include <fstream>
 #include <cstdio>
+#include "BaseCanvas.h"
 
 
 

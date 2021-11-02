@@ -1,10 +1,11 @@
-
+#include "Apollonian.h"
+#include "Construction.h"
+#include "GeoObject.h"
+#include "BaseCanvas.h"
+#include <stack>
 
 unsigned int Apollonius::maxRecursionDepth{1};
 double Apollonius::maximumCurvature{10000};
-
-#include "BaseCanvas.h"
-#include <stack>
 
 
 Apollonius::Apollonius (double k1, double k2, double k3)

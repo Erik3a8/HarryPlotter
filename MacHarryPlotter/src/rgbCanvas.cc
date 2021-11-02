@@ -2,6 +2,10 @@
 #include <chrono>
 #include <algorithm>
 #include "Colormaps.h"
+#include "rgbCanvas.h"
+#include "Mandelbrot.h"
+#include "Colors.h"
+#include "Interpolator.h"
 
 
 unsigned int rgbCanvas::fileNumberBMP{0};
@@ -33,7 +37,7 @@ rgbCanvas::~rgbCanvas ()
 	delete []buffer;
 }
 
-void rgbCanvas::setColorMap (int n, Color colors[])
+void rgbCanvas::setColorMap (int n, const Color colors[])
 {
 	if (n > MAX_CONTROL_POINTS)
 	{
@@ -47,7 +51,7 @@ void rgbCanvas::setColorMap (int n, Color colors[])
 	}
 }
 
-void rgbCanvas::setPoints (int n, double colorPoints[])
+void rgbCanvas::setPoints (int n, const double colorPoints[])
 {
 	if (n > MAX_CONTROL_POINTS)
 	{
@@ -172,6 +176,8 @@ void rgbCanvas::interpolateRGB (unsigned int n, double parameter)
 	this->setThird(getB());
 }
 
+using namespace std::chrono;
+
 void rgbCanvas::configure ()
 {
 	char configToken;
@@ -219,6 +225,7 @@ void rgbCanvas::configure ()
 					return;
 				}
 				
+				setResolution(getResolution() * getWidth() / userWidth);
 				setHeight(userHeight);
 				printf("Set width to %d and height to %d \n\n", getWidth(), getHeight());
 				break;

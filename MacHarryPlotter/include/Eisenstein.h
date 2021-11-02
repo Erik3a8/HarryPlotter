@@ -4,6 +4,7 @@
 
 #include "Complex.h"
 #include "Function.h"
+#include <memory>
 
 
 class Eisenstein : public Function {

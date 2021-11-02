@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include "Interpolator.h"
 
 // For testing and debugging
 void printMatrix(int m, int n, double matrix[]){

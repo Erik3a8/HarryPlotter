@@ -4,6 +4,7 @@
 #define APOLLONIUS_H
 
 #include "Circle.h"
+#include "Construction.h"
 #include <array>
 
 

@@ -5,6 +5,7 @@ but RGB is arguably more convenient for pictures. */
 #ifndef COLORS_H
 #define COLORS_H
 
+#include "Complex.h"
 #include <string>
 // #include "Interpolator.h"
 

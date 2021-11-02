@@ -1,5 +1,7 @@
 #include <iostream>
 #include <chrono>
+#include "StaticColorDomain.h"
+#include "Julia.h"
 
 unsigned int StaticColorDomain::fileNumberBMP{0};
 unsigned int StaticColorDomain::fileNumberMPG{0};
@@ -107,6 +109,7 @@ void StaticColorDomain::configure ()
 					return;
 				}
 				
+				setResolution(getResolution() * getWidth() / userWidth);
 				setHeight(userHeight);
 				printf("Set width to %d and height to %d \n\n", getWidth(), getHeight());
 				break;
@@ -246,23 +249,32 @@ void StaticColorDomain::configure ()
 				printf("Set length to %d frames \n\n", getFrameCount()); 
 				break;
 
-			// case '9':
-			// 	printf("Enter desired length in seconds! \n\n");
-			// 	double userLength;
+			case '8':
+				printf("Increase number of iterations with each frame y/n? \n");
 
-			// 	std::cin >> userLength;
-			// 	std::cin.clear();
-			// 	std::cout << "\033[2J\033[1;1H";
+				char toggle;
+				std::cin >> toggle;
+				std::cin.clear();
+				std::cout << "\033[2J\033[1;1H";
 
-			// 	if (userLength <= 0)
-			// 	{
-			// 		printf("Bad input, must be a positive number! \n\n");
-			// 		return;
-			// 	}
+				switch(toggle)
+				{
+					case 'y': 
+						setBreakoutFlag(true);
+						printf("Increasing iterations by 1 with each frame! \n");
+						break;
 
-			// 	SET_FRAME_COUNT(userLength * GET_FPS());
-			// 	printf("Set length to %d frames \n\n", GET_FRAME_COUNT()); 
-			// 	break;
+					case 'n':
+						setBreakoutFlag(false);
+						printf("Constant number of iterations! \n");
+						break;
+
+					default: 
+						printf("Invalid Option! \n");
+						break;
+				}
+				break;	
+
 
 			case 'b': break;
 

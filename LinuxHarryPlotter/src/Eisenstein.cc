@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <math.h>
+#include <memory>
+#include "Eisenstein.h"
 
 
 
@@ -165,14 +167,6 @@ void Eisenstein::evaluate ()
 // 	this->SET_value (Complex(1, 0) + Complex(240, 0) * this->GET_value());
 // }
 
-Complex Eis (Complex z, int weight)
-{
-	Eisenstein Eis(z, weight);
-	Complex result;
-	Eis.setBreakoutIterator(200);
-	Eis.evaluate();
-	result = Eis.getValue();
-	return result;
-}
+
 
 	

@@ -6,6 +6,7 @@
 #include "Colors.h"
 #include "BaseCanvas.h"
 #include "Animator.h"
+#include "Interpolator.h"
 
 class rgbCanvas: public Animation, public Color, public Interpolator {
 public:
@@ -34,9 +35,9 @@ public:
 	// evaluating the polynomial created by RGBPolynomialSpline
 	void interpolateRGB (unsigned int n, double parameter);
 
-	static void setColorMap (int n, Color colormap[]);
+	static void setColorMap (int n, const Color colormap[]);
 
-	static void setPoints (int n, double colorPoints[]);
+	static void setPoints (int n, const double colorPoints[]);
 
 	void firstPass (const int x, const int y, Function &F); 
 

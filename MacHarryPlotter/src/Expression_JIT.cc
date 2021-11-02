@@ -11,6 +11,7 @@
 #include <memory>
 #include <vector>
 #include <stack>
+#include "Expression_JIT.h"
 
 
 

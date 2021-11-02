@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <math.h>
+#include <memory>
+#include "Eisenstein.h"
 
 
 

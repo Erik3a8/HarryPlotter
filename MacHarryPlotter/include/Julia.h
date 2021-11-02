@@ -8,6 +8,7 @@ is abused as a "normal" function plotter by iterating 0 times. Not pretty. */
 #include "Function.h"
 // #include "Expression_SLOW.h"
 #include "Expression_JIT.h"
+#include <memory>
 
 
 class Julia : public Expression, public Function {

@@ -12,39 +12,13 @@
 #include <memory>
 #include <dlfcn.h> 
 #include <omp.h>
-#include "Interpolator.h"
 #include "BaseCanvas.h"
 #include "StaticGrid.h"
 #include "StaticColorDomain.h"
-#include "rgbCanvas.h"
 #include "GeometryCanvas.h"
-#include "Julia.h"
-// #include "Expression_JIT.cc"
-#include "Expression_SLOW.h"
-#include "Encoder.h"
-#include "Construction.h"
-#include "GeoObject.h"
-#include "Circle.h"
-#include "Apollonian.h"
-#include "Mandelbrot.h"
-#include "Complex.cc"
-#include "BaseCanvas.cc"
-#include "StaticGrid.cc"
-#include "StaticColorDomain.cc"
-#include "rgbCanvas.cc"
-#include "Circle.cc"
-#include "GeometryCanvas.cc"
-#include "Apollonian.cc"
-#include "Function.cc"
-#include "Interpolator.cc"
-// #include "Expression_JIT.cc"
-#include "Eisenstein.cc"
-#include "Expression_SLOW.cc"
-#include "Colors.cc"
-#include "Julia.cc"
-#include "Mandelbrot.cc"
-#include "Animator.cc"
+#include "rgbCanvas.h"
 
+// #include "Expression_SLOW.h"
 
 /* ToDo:
 - Implement Bezier Curves
@@ -164,7 +138,6 @@ void geometry ()
 	}	
 }
 
-
 using namespace std::chrono;
 
 int main() 
@@ -186,6 +159,7 @@ int main()
 		printf("Main Directory not found, exiting");
 		exit(EXIT_FAILURE);
 	}
+
 
 	if (std::filesystem::exists(mainDir / "Results"))
 	{
@@ -225,5 +199,6 @@ int main()
 	}
 
 	printf("Remember to relocate/rename all files of this session or they might be overwritten next time! \n");
+
 	return 0;
 }

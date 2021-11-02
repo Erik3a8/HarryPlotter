@@ -6,6 +6,8 @@ math about them (at least what I know about math) than for generic maps.
 #ifndef MANDELBROT_H
 #define MANDELBROT_H
 
+#include <memory>
+#include "Function.h"
 
 class Mandelbrot : public Function {
 private:

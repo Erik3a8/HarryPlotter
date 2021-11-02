@@ -1,3 +1,6 @@
+#include "Animator.h"
+#include "Encoder.h"
+
 
 unsigned int Animation::FrameCount{1};
 unsigned int Animation::fps{30};

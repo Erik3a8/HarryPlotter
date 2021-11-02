@@ -3,6 +3,8 @@ size in case of animations. Definitely observe the deconstructor to avoid memory
 #include <iostream>
 #include <math.h>
 #include <chrono>
+#include "StaticGrid.h"
+#include "Julia.h"
 
 
 
@@ -16,6 +18,7 @@ StaticGrid::StaticGrid (const int x, const int y, const double res, const double
 	this->setWidth(x);
 	this->setHeight(y);
 	this->realSizeX = this->getWidth() * getResolution();
+
 	this->realSizeY = this->getHeight() * getResolution();
 	this->setCenterX(CX);
 	this->setCenterY(CY);
@@ -31,35 +34,124 @@ StaticGrid::~StaticGrid ()
 	delete []buffer;
 }
 
+double StaticGrid::findSamplingStepX (const int X, const int Y, Function &F)
+{
+    double re = (double)(getCenterX() - realSizeX / 2) + (X - 0.5) * getResolution();
+    double im = (double)(getCenterY() + realSizeY / 2) - (Y) * getResolution();
+
+    F.setInput(Complex(re, im));
+    Complex start = F.returnComplex();
+
+    re = (double)(getCenterX() - realSizeX / 2) + (X + 0.5) * getResolution();
+    im = (double)(getCenterY() + realSizeY / 2) - (Y) * getResolution();
+
+    F.setInput(Complex(re, im));
+    Complex end = F.returnComplex();
+
+    return getResolution() / (start - end).norm();
+}
+
+double StaticGrid::findSamplingStepY (const int X, const int Y, Function &F)
+{   
+    double re = (double)(getCenterX() - realSizeX / 2) + (X) * getResolution();
+    double im = (double)(getCenterY() + realSizeY / 2) - (Y - 0.5) * getResolution();
+
+    F.setInput(Complex(re, im));
+    Complex start = F.returnComplex();
+
+    re = (double)(getCenterX() - realSizeX / 2) + (X) * getResolution();
+    im = (double)(getCenterY() + realSizeY / 2) - (Y + 0.5) * getResolution();
+
+    F.setInput(Complex(re, im));
+    Complex end = F.returnComplex();
+
+    return getResolution() / (start - end).norm();
+}
+
 void StaticGrid::populatePixel (const int X, const int Y, Function &F)                         
 {   
-    // Convert Pixels to actual Complex values
-    double re = (double)(getCenterX() - realSizeX / 2) + X * getResolution();
-    double im = (double)(getCenterY() + realSizeY / 2) - Y * getResolution();
-    
-    // Set the function to that Pixel.
-    F.setValue(Complex(re, im));
-    F.setInput(Complex(re, im));
-    
-    // Compute the value of the function
-    Complex zMapped = F.returnComplex();
-
-    // Compute the Corresponding Pixel
-    int X_NEW = round((zMapped.Re() - (getCenterX() - realSizeX / 2)) / getResolution());
-    int Y_NEW = round(((getCenterY() + realSizeY / 2) - zMapped.Im()) / getResolution());
-
-    // Check if that Pixel is outside the Canvas
-    if (X_NEW >= getWidth() || Y_NEW >= getHeight() || Y_NEW < 0 || X_NEW < 0 || Y_NEW * getWidth() + X_NEW > getHeight() * getWidth() + getWidth() - 1)
+    if (samplingDirection)
     {
-        return;  
+        double stepX = findSamplingStepX(X, Y, F);
+
+        if (isnan(stepX))
+        {
+            stepX = 0.00001;
+        }
+
+        for (double superSampleX = -0.5; superSampleX < 0.5; superSampleX += stepX)
+        {
+            // Convert Pixels to actual Complex values
+            double re = (double)(getCenterX() - realSizeX / 2) + (X + superSampleX) * getResolution();
+            double im = (double)(getCenterY() + realSizeY / 2) - (Y) * getResolution();
+
+            // Set the function to that Pixel.
+            F.setValue(Complex(re, im));
+            F.setInput(Complex(re, im));
+            
+            // Compute the value of the function
+            Complex zMapped = F.returnComplex();
+
+            // Compute the Corresponding Pixel
+            int X_NEW = round((zMapped.Re() - (getCenterX() - realSizeX / 2)) / getResolution());
+            int Y_NEW = round(((getCenterY() + realSizeY / 2) - zMapped.Im()) / getResolution());
+
+            // Check if that Pixel is outside the Canvas
+            if (X_NEW >= getWidth() || Y_NEW >= getHeight() || Y_NEW < 0 || X_NEW < 0 || Y_NEW * getWidth() + X_NEW > getHeight() * getWidth() + getWidth() - 1)
+            {
+                return;  
+            }
+
+            // Convert the Pixel to a Color Object
+            Color Pixel(360, 1, 1, "HSL");
+            Pixel.HSL_to_RGB();
+
+            // Write to the Buffer
+            buffer[Y_NEW * getWidth() + X_NEW] = Pixel;
+        }
     }
 
-    // Convert the Pixel to a Color Object
-    Color Pixel(360, 1, 1, "HSL");
-    Pixel.HSL_to_RGB();
+    else 
+    {
+        double stepY = findSamplingStepY(X, Y, F);
 
-    // Write to the Buffer
-    buffer[Y_NEW * getWidth() + X_NEW] = Pixel;
+        if (isnan(stepY))
+        {
+            stepY = 0.00001;
+        }
+
+        for (double superSampleY = -0.5; superSampleY < 0.5; superSampleY += stepY)
+        {
+            // Convert Pixels to actual Complex values
+            double re = (double)(getCenterX() - realSizeX / 2) + X * getResolution();
+            double im = (double)(getCenterY() + realSizeY / 2) - (Y - superSampleY) * getResolution();
+
+            // Set the function to that Pixel.
+            F.setValue(Complex(re, im));
+            F.setInput(Complex(re, im));
+            
+            // Compute the value of the function
+            Complex zMapped = F.returnComplex();
+
+            // Compute the Corresponding Pixel
+            int X_NEW = round((zMapped.Re() - (getCenterX() - realSizeX / 2)) / getResolution());
+            int Y_NEW = round(((getCenterY() + realSizeY / 2) - zMapped.Im()) / getResolution());
+
+            // Check if that Pixel is outside the Canvas
+            if (X_NEW >= getWidth() || Y_NEW >= getHeight() || Y_NEW < 0 || X_NEW < 0 || Y_NEW * getWidth() + X_NEW > getHeight() * getWidth() + getWidth() - 1)
+            {
+                return;  
+            }
+
+            // Convert the Pixel to a Color Object
+            Color Pixel(360, 1, 1, "HSL");
+            Pixel.HSL_to_RGB();
+
+            // Write to the Buffer
+            buffer[Y_NEW * getWidth() + X_NEW] = Pixel;
+        }
+    }
+      
 }
 
 void StaticGrid::populateCanvas (Function &F, const int interval) 
@@ -68,7 +160,9 @@ void StaticGrid::populateCanvas (Function &F, const int interval)
     reducedHeight = getHeight() / interval;
     reducedWidth = getWidth() / interval;
 
-/* Filling the buffer with color data. Using multicore power TL-BR */
+    /* Filling the buffer with color data. Using multicore power TL-BR */
+    this->samplingDirection = true;
+
 #pragma omp parallel for collapse(2)
     for (int Y = reducedHeight - 1; Y >= 0; Y--) 
     {
@@ -78,6 +172,8 @@ void StaticGrid::populateCanvas (Function &F, const int interval)
         }
     }
     
+    this->samplingDirection = false;
+
 #pragma omp parallel for collapse(2)
     for (int Y = getHeight() - 1; Y >= 0; Y--) 
     {
@@ -104,6 +200,7 @@ void StaticGrid::configure ()
         printf("5: Set line spacing \n");
         printf("6: Set framerate \n");
         printf("7: Set length in seconds \n");
+        printf("8: Toggle breakout iteration for rendering \n");
         printf("b: Back \n");
         std::cin >> configToken;
         std::cout << "\033[2J\033[1;1H";
@@ -123,6 +220,7 @@ void StaticGrid::configure ()
                     printf("Bad input, only positive integers allowed! \n\n");
                     return;
                 }
+                setResolution(getResolution() * getWidth() / userWidth);
                 setWidth(userWidth);
                 printf("Ok! \n");
                 printf("Enter desired height in pixels \n");
@@ -277,6 +375,32 @@ void StaticGrid::configure ()
                 printf("Set length to %d frames \n\n", getFrameCount()); 
                 break;
 
+            case '8':
+                printf("Increase number of iterations with each frame y/n? \n");
+
+                char toggle;
+                std::cin >> toggle;
+                std::cin.clear();
+                std::cout << "\033[2J\033[1;1H";
+
+                switch(toggle)
+                {
+                    case 'y': 
+                        setBreakoutFlag(true);
+                        printf("Increasing iterations by 1 with each frame! \n");
+                        break;
+
+                    case 'n':
+                        setBreakoutFlag(false);
+                        printf("Constant number of iterations! \n");
+                        break;
+
+                    default: 
+                        printf("Invalid Option! \n");
+                        break;
+                }
+                break;  
+
             case 'b': break;
 
             default: printf("Invalid Option! \n\n"); break;
@@ -324,11 +448,11 @@ void StaticGrid::image ()
         function.prepare();
         function.parse();
 
-        // if (function.getFuncPtr() == nullptr)
-        // {
-        //     printf("Exiting... \n\n");
-        //     return;
-        // }
+        if (function.getFuncPtr() == nullptr)
+        {
+            printf("Exiting... \n\n");
+            return;
+        }
 
         //Calculate 
         printf("Calculating... \n");
@@ -396,11 +520,11 @@ void StaticGrid::movie ()
         function.prepare();
         function.parse();
 
-        // if (function.getFuncPtr() == nullptr)
-        // {
-        //     printf("Exiting... \n\n");
-        //     return;
-        // }
+        if (function.getFuncPtr() == nullptr)
+        {
+            printf("Exiting... \n\n");
+            return;
+        }
 
         //Calculate 
         printf("Rendering... \n");

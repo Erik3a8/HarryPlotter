@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Julia.h"
 
 
 Julia::Julia () 

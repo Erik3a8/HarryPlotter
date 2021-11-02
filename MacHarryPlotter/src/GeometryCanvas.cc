@@ -4,6 +4,10 @@ size in case of animations. Definitely observe the deconstructor to avoid memory
 #include <iostream>
 #include <math.h>
 #include <chrono>
+#include "GeometryCanvas.h"
+#include "Apollonian.h"
+#include "Julia.h"
+
 
 
 unsigned int GeometryCanvas::fileNumberBMP{0};
@@ -78,6 +82,8 @@ void GeometryCanvas::populateGeoCanvas (Construction constr)
     }
 }
 
+using namespace std::chrono;
+
 // So begins the enormous command line interface...
 void GeometryCanvas::configure ()
 {
@@ -114,6 +120,7 @@ void GeometryCanvas::configure ()
 					return;
 				}
 
+				setResolution(getResolution() * getWidth() / userWidth);
 				setWidth(userWidth);
 				printf("Ok! \n");
 				printf("Enter desired height in pixels \n");
@@ -280,7 +287,8 @@ void GeometryCanvas::configure ()
 				printf("Set length to %d frames \n\n", getFrameCount()); 
 				break;
 
-			// case '8':
+			case '8':
+				printf("Not implemented! \n");
 			// 	printf("Enter desired length in seconds! \n\n");
 			// 	double userLength;
 
@@ -296,7 +304,7 @@ void GeometryCanvas::configure ()
 
 			// 	SET_FRAME_COUNT(userLength * GET_FPS());
 			// 	printf("Set length to %d frames \n\n", GET_FRAME_COUNT()); 
-			// 	break;
+			break;
 
 			case 'b': break;
 
